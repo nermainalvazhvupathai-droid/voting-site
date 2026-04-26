@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Voting Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .count {
+      font-size: 40px;
+      font-weight: bold;
+      color: green;
+    }
+
+    .oppose {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🗳️ Live Voting Result</h1>
+
+<div class="box">
+  <h2>ஆதரவு</h2>
+  <div id="support" class="count">0</div>
+</div>
+
+<div class="box">
+  <h2>எதிர்ப்பு</h2>
+  <div id="oppose" class="count oppose">0</div>
+</div>
+
+<script>
+const sheetURL = "YOUR_CSV_LINK_HERE";
+
+async function loadData() {
+  let res = await fetch(sheetURL);
+  let text = await res.text();
+
+  let rows = text.split("\n");
+
+  let support = 0;
+  let oppose = 0;
+
+  rows.forEach(row => {
+    if(row.includes("ஆதரவு")) support++;
+    if(row.includes("எதிர்ப்பு")) oppose++;
+  });
+
+  document.getElementById("support").innerText = support;
+  document.getElementById("oppose").innerText = oppose;
+}
+
+// auto refresh every 3 seconds
+setInterval(loadData, 3000);
+
+loadData();
+</script>
+
+</body>
+</html>
